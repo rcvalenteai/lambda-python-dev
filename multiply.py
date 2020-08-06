@@ -48,6 +48,3 @@ class MissingError(Exception):
     def __init__(self, message=None):
         if message is None:
             self.message = "Exception raised when critical values are missing from get request"
-
-
-
