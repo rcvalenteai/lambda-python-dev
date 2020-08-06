@@ -11,13 +11,16 @@ def lambda_handler(event, context):
     :return: http response object
     """
     # 1. Parse out query string params
-    transaction_id = event['queryStringParameters']['transaction_id']
-    transaction_type = event['queryStringParameters']['type']
-    transaction_amount = event['queryStringParameters']['amount']
+    try:
+        transaction_id = event['queryStringParameters']['transaction_id']
+        transaction_type = event['queryStringParameters']['type']
+        transaction_amount = event['queryStringParameters']['amount']
+    except KeyError:
+        raise MissingError()
 
-    print('transaction_id=' + transaction_id)
-    print('transaction_type=' + transaction_type)
-    print('transaction_amount=' + transaction_amount)
+    print('transaction_id=', transaction_id)
+    print('transaction_type=', transaction_type)
+    print('transaction_amount=', transaction_amount)
 
     # 2. Construct the body of the response object
     transaction_response = dict()
@@ -35,5 +38,16 @@ def lambda_handler(event, context):
 
     # 4. Return the response object
     return response_object
+
+
+class MissingError(Exception):
+    """
+    Exception raised when critical values missing from get request
+    """
+
+    def __init__(self, message=None):
+        if message is None:
+            self.message = "Exception raised when critical values are missing from get request"
+
 
 
